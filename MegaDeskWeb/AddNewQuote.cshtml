@@ -1,0 +1,32 @@
+﻿@{
+    var db = Database.Open("MegaDeskWeb");
+    var selectedData = db.Query("SELECT * FROM Quote");
+    var grid = new WebGrid(source: selectedData);
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Mega Desk</title>
+</head>
+
+<body>
+    <header>
+        Mega Desk
+    </header>
+    <nav>
+        <a href="~/MegaDeskWeb.cshtml">Home</a>
+        <a href="">View All Quotes</a>
+        <a href="">Search Quote</a>
+    </nav>
+    <section>
+        Section
+    </section>
+    <aside>
+        Aside
+    </aside>
+    <! -- //grid.GetHtml() -->
+    <footer><! -- //ServerInfo.GetHtml() --></footer>
+</body>

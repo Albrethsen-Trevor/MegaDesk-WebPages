@@ -1,0 +1,45 @@
+﻿@{ 
+    var db = Database.Open("MegaDeskWeb");
+    var quoteId = "";
+    if (!Request.QueryString["ID"].IsEmpty() && Request.QueryString["ID"].IsInt())
+    {
+        quoteId = Request.QueryString["ID"];
+
+    }
+    var selectedData = db.Query("SELECT * FROM Quote WHERE Name = @0", quoteId);
+    var grid = new WebGrid(source: selectedData);
+    var deleted = "";
+    if (IsPost)
+    {
+        var deleteQuery = "DELETE FROM Quote WHERE ID = @0";
+        db.Execute(deleteQuery, quoteId);
+        deleted = "The quote deleted";
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="">
+    <title>Mega Desk</title>
+</head>
+<body>
+    <header>
+        Delete Quote
+    </header>
+    <nav>
+        <a href="~/MegaDeskWeb.cshtml">Home</a>
+        <a href="~/AddNewQuote.cshtml">Add New Quote</a>
+        <a href="~/SearchQuote.cshtml">Search Quote</a>
+    </nav>
+    <form method="post">
+        <br />
+        Delete the Quote?
+        <br>
+        <input type="submit" value="Delete">
+    </form>
+    <div>
+        @deleted;
+    </div>
+</body>
+</html>

@@ -1,0 +1,79 @@
+﻿@{
+    var updated = "";
+    if (IsPost)
+    {
+        string name = Convert.ToString(Request.Form["name"]);
+        int material = Convert.ToInt32(Request.Form["material"]);
+        int rush = Convert.ToInt32(Request.Form["rush"]);
+        int width = Convert.ToInt32(Request.Form["width"]);
+        int length = Convert.ToInt32(Request.Form["length"]);
+        int area_charge = 0;
+        if ((width * length) > 1000)
+        {
+            area_charge = ((width * length) - 1000) * 100;
+        }
+        int drawers = Convert.ToInt32(Request.Form["drawers"]);
+        int price = material + rush + area_charge + drawers;
+
+        var today = DateTime.Today;
+
+        var quoteId = "";
+        if (!Request.QueryString["ID"].IsEmpty() && Request.QueryString["ID"].IsInt())
+        {
+            quoteId = Request.QueryString["ID"];
+        }
+        var db = Database.Open("MegaDeskWeb");
+        var insertQuery = "UPDATE Quote SET Name=@0, Price=@1, Date=@2 WHERE Id=@3";
+        db.Execute(insertQuery, name, price, today, quoteId);
+        updated = "The quote updated";
+    }
+}
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="">
+        <title>Mega Desk</title>
+    </head>
+    <body>
+        <header>
+            Edit Quote
+        </header>
+        <nav>
+            <a href="~/MegaDeskWeb.cshtml">Home</a>
+            <a href="~/AddNewQuote.cshtml">Add New Quote</a>
+            <a href="~/SearchQuote.cshtml">Search Quote</a>
+        </nav>
+        <form method="post">
+            Input name:
+            <input type="text" name="name" />
+            <br>
+            Surface Material:
+            <select name="material">
+                <option value="5000">Pine</option>
+                <option value="10000">Laminat</option>
+                <option value="12500">Veneer</option>
+                <option value="20000">Oak</option>
+                <option value="30000">Rosewook</option>
+            </select>
+            <select name="rush">
+                <option value="8000">3 days</option>
+                <option value="5000">5 days</option>
+                <option value="3000">7 days</option>
+                <option value="0">7+ days</option>
+            </select>
+            <br>
+            Input width:
+            <input type="text" name="width" />
+            Input length:
+            <input type="text" name="length" />
+            Input drawers:
+            <input type="text" name="draewrs" />
+            <br>
+            <input type="submit" value="Update">
+        </form>
+        <div>
+            @updated;
+        </div>
+    </body>
+</html>

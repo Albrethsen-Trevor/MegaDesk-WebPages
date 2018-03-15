@@ -92,7 +92,10 @@
   <ItemGroup>
     <Content Include="MegaDeskWeb.cshtml" />
     <Content Include="AddNewQuote.cshtml" />
+    <Content Include="DeleteQuote.cshtml" />
+    <Content Include="EditQuote.cshtml" />
     <None Include="packages.config" />
+    <Content Include="SearchQuote.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

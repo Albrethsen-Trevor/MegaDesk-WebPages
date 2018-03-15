@@ -1,0 +1,50 @@
+﻿@{
+    string name = "";
+    if (IsPost)
+    {
+        name = Convert.ToString(Request.Form["name"]);
+    }
+
+    var db = Database.Open("MegaDeskWeb");
+    var selectedData = db.Query("SELECT * FROM Quote WHERE Name = @0", name);
+    var grid = new WebGrid(source: selectedData);
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="">
+    <title>Mega Desk</title>
+</head>
+
+<body>
+    <header>
+        Search Quotes
+    </header>
+    <nav>
+        <a href="~/MegaDeskWeb.cshtml">Home</a>
+        <a href="~/AddNewQuote.cshtml">Add New Quote</a>
+    </nav>
+    <form method="post">
+        Input name for search:
+        <input type="text" name="name" />
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+    <div>
+        @grid.GetHtml(
+          tableStyle: "grid",
+          headerStyle: "head",
+          alternatingRowStyle: "alt",
+          columns: grid.Columns(
+               grid.Column(format: @<a href="~/EditQuote.cshtml?id=@item.ID">Edit</a>),
+             grid.Column("Name"),
+             grid.Column("Price"),
+             grid.Column("Date"),
+             grid.Column(format: @<a href="~/DeleteQuote.cshtml?id=@item.ID">Delete</a>)
+             )
+       )
+    </div>
+        <footer></footer>
+</body>

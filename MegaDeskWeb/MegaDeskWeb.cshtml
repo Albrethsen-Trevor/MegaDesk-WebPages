@@ -5,11 +5,16 @@
         // <p>@msg</p>
         // For more information, visit https://go.microsoft.com/fwlink/?LinkID=204658
 }
+@{
+    var db = Database.Open("MegaDeskWeb");
+    var selectedData = db.Query("SELECT * FROM Quote");
+    var grid = new WebGrid(source: selectedData);
+}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="">
     <title>Mega Desk</title>
 </head>
 
@@ -19,17 +24,22 @@
     </header>
     <nav>
         <a href="~/AddNewQuote.cshtml">Add New Quote</a>
-        <a href="">View All Quotes</a>
-        <a href="">Search Quote</a>
+        <a href="~/SearchQuote.cshtml">Search Quote</a>
     </nav>
-    <section>
-        Section
-    </section>
-    <aside>
-        Aside
-    </aside>
-    <! -- //grid.GetHtml() -->
-    <footer><! -- //ServerInfo.GetHtml() --></footer>
+    <h1>Quotes</h1>
+    @grid.GetHtml(
+         tableStyle: "grid",
+         headerStyle: "head",
+         alternatingRowStyle: "alt",
+         columns: grid.Columns(
+              grid.Column(format: @<a href="~/EditQuote.cshtml?id=@item.ID">Edit</a>),
+              grid.Column("Name"),
+              grid.Column("Price"),
+              grid.Column("Date"),
+              grid.Column(format: @<a href="~/DeleteQuote.cshtml?id=@item.ID">Delete</a>)
+              )
+        )
+    <footer></footer>
 </body>
 
 </html>

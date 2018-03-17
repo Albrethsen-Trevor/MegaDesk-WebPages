@@ -14,35 +14,40 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="">
+    <link rel="stylesheet" type="text/css" href="~/Styles/main.css">
     <title>Mega Desk</title>
 </head>
 
 <body>
-    <header>
+    <h1>
         Search Quotes
-    </header>
-    <nav>
-        <a href="~/MegaDeskWeb.cshtml">Home</a>
-        <a href="~/AddNewQuote.cshtml">Add New Quote</a>
-    </nav>
+    </h1>
+    <ul>
+        <li><a href="~/MegaDeskWeb.cshtml">Home</a></li>
+        <li><a href="~/AddNewQuote.cshtml">Add New Quote</a></li>
+        <li><a href="~/SearchQuote.cshtml">Search Quote</a></li>
+    </ul>
+    <br />
+    <hr />
     <form method="post">
         Input name for search:
         <input type="text" name="name" />
         <br>
         <input type="submit" value="Submit">
     </form>
+    <hr />
     <div>
         @grid.GetHtml(
           tableStyle: "grid",
           headerStyle: "head",
           alternatingRowStyle: "alt",
           columns: grid.Columns(
-               grid.Column(format: @<a href="~/EditQuote.cshtml?id=@item.ID">Edit</a>),
+             grid.Column(format: @<a href="~/EditQuote.cshtml?id=@item.ID" class="editButton">Edit</a>),
              grid.Column("Name"),
              grid.Column("Price"),
-             grid.Column("Date"),
-             grid.Column(format: @<a href="~/DeleteQuote.cshtml?id=@item.ID">Delete</a>)
+             grid.Column("Date",
+             format: item => ((item.Date == null) ? "" : item.Date.ToString("MM/dd/yyyy"))),
+             grid.Column(format: @<a href="~/DeleteQuote.cshtml?id=@item.ID" class="deleteButton">Delete</a>)
              )
        )
     </div>

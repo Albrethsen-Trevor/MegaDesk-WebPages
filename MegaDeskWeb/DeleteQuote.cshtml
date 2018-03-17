@@ -1,45 +1,75 @@
-﻿@{ 
-    var db = Database.Open("MegaDeskWeb");
+﻿@{
+    var name = "";
+    var price = "";
+    var date = "";
     var quoteId = "";
-    if (!Request.QueryString["ID"].IsEmpty() && Request.QueryString["ID"].IsInt())
-    {
-        quoteId = Request.QueryString["ID"];
 
-    }
-    var selectedData = db.Query("SELECT * FROM Quote WHERE Name = @0", quoteId);
-    var grid = new WebGrid(source: selectedData);
-    var deleted = "";
-    if (IsPost)
+    if(!IsPost)
     {
-        var deleteQuery = "DELETE FROM Quote WHERE ID = @0";
-        db.Execute(deleteQuery, quoteId);
-        deleted = "The quote deleted";
+        if (!Request.QueryString["ID"].IsEmpty() && Request.QueryString["ID"].IsInt())
+        {
+            quoteId = Request.QueryString["ID"];
+            var db = Database.Open("MegaDeskWeb");
+            var dbCommand = "SELECT * FROM Quote WHERE ID = @0";
+            var row = db.QuerySingle(dbCommand, quoteId);
+            if(row != null)
+            {
+                name = row.Name;
+                price = row.Price;
+                date = row.Date.ToString("MM/dd/yyyy");
+            } else
+            {
+                Validation.AddFormError("No quote was found for that ID.");
+            }
+        } else
+        {
+            Validation.AddFormError("No quote was found for that ID.");
+        }
+    }
+
+    if (IsPost && !Request["buttonDelete"].IsEmpty())
+    {
+        quoteId = Request.Form["quoteId"];
+        var db = Database.Open("MegaDeskWeb");
+        var deleteCommand = "DELETE FROM Quote WHERE ID = @0";
+        db.Execute(deleteCommand, quoteId);
+        Response.Redirect("~/MegaDeskWeb");
     }
 }
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="">
+    <link href="~/Styles/main.css" rel="stylesheet" />
     <title>Mega Desk</title>
 </head>
 <body>
-    <header>
+    <h1>
         Delete Quote
-    </header>
-    <nav>
-        <a href="~/MegaDeskWeb.cshtml">Home</a>
-        <a href="~/AddNewQuote.cshtml">Add New Quote</a>
-        <a href="~/SearchQuote.cshtml">Search Quote</a>
-    </nav>
+    </h1>
+    <ul>
+        <li><a href="~/MegaDeskWeb.cshtml">Home</a></li>
+        <li><a href="~/AddNewQuote.cshtml">Add New Quote</a></li>
+        <li><a href="~/SearchQuote.cshtml">Search Quote</a></li>
+    </ul>
+    <br />
+    <hr />
     <form method="post">
-        <br />
-        Delete the Quote?
-        <br>
-        <input type="submit" value="Delete">
+        <fieldset>
+            <legend>Scripture Note Information</legend>
+
+            <p><span><strong>Name:</strong></span></p>
+            <span>@name</span>
+
+            <p><span><strong>Price:</strong></span></p>
+            <span>@price</span>
+
+            <p><span><strong>Date:</strong></span></p>
+            <span>@date</span>
+
+            <input type="hidden" name="scriptureid" value="@quoteId" />
+            <p><input type="submit" name="buttonDelete" value="Delete Quote" /></p>
+        </fieldset>
     </form>
-    <div>
-        @deleted;
-    </div>
 </body>
 </html>

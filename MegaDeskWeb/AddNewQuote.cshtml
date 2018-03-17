@@ -1,5 +1,10 @@
 ﻿@{ 
-    if (IsPost)
+    Validation.RequireField("name", "You must enter the customer's name");
+    Validation.RequireField("width", "Enter a width between 24 and 96");
+    Validation.RequireField("length", "Enter a length between 12 and 48");
+    Validation.RequireField("drawers", "Choose between 0 to 7 drawers");
+
+    if (IsPost && Validation.IsValid())
     {
         string name = Convert.ToString(Request.Form["name"]);
         int material = Convert.ToInt32(Request.Form["material"]);
@@ -28,22 +33,24 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="">
+    <link href="~/Styles/main.css" rel="stylesheet" />
     <title>Mega Desk</title>
 </head>
 
 <body>
-    <header>
-        Add New Quote
-    </header>
-    <nav>
-        <a href="~/MegaDeskWeb.cshtml">Home</a>
-        <a href="~/SearchQuote.cshtml">Search Quote</a>
-    </nav>
+    <h1>Add New Quote</h1>
+    <ul>
+        <li><a href="~/MegaDeskWeb.cshtml">Home</a></li>
+        <li><a href="~/AddNewQuote.cshtml">Add New Quote</a></li>
+        <li><a href="~/SearchQuote.cshtml">Search Quote</a></li>
+    </ul>
+    <hr />
     <form method="post">
         Input name:
-        <input type="text" name="name" />
-        <br>
+        <input type="text" name="name" value="@Request.Form["name"]" />
+        @Html.ValidationMessage("name")
+        <br />
+        <br />
         Surface Material:
         <select name="material">
             <option value="5000">Pine</option>
@@ -52,20 +59,32 @@
             <option value="20000">Oak</option>
             <option value="30000">Rosewook</option>
         </select>
+        <br />
+        <br />
+        Rush Order Delivery:
         <select name="rush">
             <option value="8000">3 days</option>
             <option value="5000">5 days</option>
             <option value="3000">7 days</option>
             <option value="0">7+ days</option>
         </select>
-        <br>
+        <br />
+        <br />
         Input width:
-        <input type="text" name="width" />
+        <input type="text" name="width" value="@Request.Form["width"]" />
+        @Html.ValidationMessage("width")
+        <br />
+        <br />
         Input length:
-        <input type="text" name="length" />
+        <input type="text" name="length" value="@Request.Form["length"]" />
+        @Html.ValidationMessage("length")
+        <br />
+        <br />
         Input drawers:
-        <input type="text" name="draewrs" />
+        <input type="text" name="drawers" value="@Request.Form["drawers"]" />
+        @Html.ValidationMessage("drawers")
         <br>
+        <br />
         <input type="submit" value="Submit">
     </form>
     <footer></footer>
